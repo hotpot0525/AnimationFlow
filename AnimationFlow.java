@@ -8,11 +8,12 @@ import android.view.animation.Animation.AnimationListener;
 
 public class AnimationFlow implements AnimationListener {
 
-	ArrayList<AnimationItem> animList;
-	int animationCount;
+	private ArrayList<AnimationItem> animList;
+	private int animationCount;
+	private CallbackListener callbackListener;
 
 	public AnimationFlow() {
-		animList = new ArrayList<AnimationFlow.AnimationItem>();
+		animList = new ArrayList<AnimationItem>();
 		animationCount = 0;
 	}
 
@@ -20,27 +21,52 @@ public class AnimationFlow implements AnimationListener {
 		animList.add(new AnimationItem(v, anim));
 	}
 
+	public void setCallback(CallbackListener callbackListener) {
+		this.callbackListener = callbackListener;
+	}
+
+	private void countUp() {
+		animationCount++;
+	}
+
 	public void start() {
 		animationStart(0);
-
 	}
 
 	private void animationStart(int i) {
-		if(animList.size() < i){
+		if (animList.size() <= i) {
+			animationEnd();
 			return;
 		}
 		AnimationItem item = animList.get(i);
-		
-		if(animList.size()-1 != i){
-			setListemer(item.animation);
-		}
-		
+
+		setListener(item.animation);
+
 		item.view.startAnimation(item.animation);
-		
 	}
 
-	private void setListemer(Animation animation) {
+	private void animationEnd() {
+		if (callbackListener != null) {
+			callbackListener.animationEnd();
+		}
+	}
+
+	private void setListener(Animation animation) {
 		animation.setAnimationListener(this);
+	}
+
+	@Override
+	public void onAnimationEnd(Animation arg0) {
+		countUp();
+		animationStart(animationCount);
+	}
+
+	@Override
+	public void onAnimationRepeat(Animation arg0) {
+	}
+
+	@Override
+	public void onAnimationStart(Animation arg0) {
 	}
 
 	class AnimationItem {
@@ -53,27 +79,7 @@ public class AnimationFlow implements AnimationListener {
 		}
 	}
 
-	private void countUp() {
-		if (animationCount < animList.size()-1) {
-			animationCount++;
-		}
+	public interface CallbackListener {
+		void animationEnd();
 	}
-
-	@Override
-	public void onAnimationEnd(Animation arg0) {
-
-		countUp();
-		animationStart(animationCount);
-
-	}
-
-	@Override
-	public void onAnimationRepeat(Animation arg0) {
-	}
-
-	@Override
-	public void onAnimationStart(Animation arg0) {
-
-	}
-
 }

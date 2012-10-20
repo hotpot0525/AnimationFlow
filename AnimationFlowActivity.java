@@ -1,7 +1,9 @@
 package hotpot.game.animation;
 
+import hotpot.game.animation.AnimationFlow.CallbackListener;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
@@ -27,6 +29,14 @@ public class AnimationFlowActivity extends Activity {
         animationFlow.add(view1, anim1);
         animationFlow.add(view2, anim2);
         animationFlow.add(view1, anim3);
+        animationFlow.setCallback(new CallbackListener() {
+			
+			@Override
+			public void animationEnd() {
+				// hogehoge
+				Log.i("AnimationFlowActivity","animationFlow end");
+			}
+		});
         animationFlow.start();
         
     }
