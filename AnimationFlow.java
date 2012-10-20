@@ -61,10 +61,7 @@ public class AnimationFlow implements AnimationListener {
 
 	@Override
 	public void onAnimationEnd(Animation arg0) {
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-		}
+
 		countUp();
 		animationStart(animationCount);
 
